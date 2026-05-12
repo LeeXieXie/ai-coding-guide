@@ -3,13 +3,13 @@
   - [指南介绍](01-intro.md)
   - [Scoop 安装 Node.js 和 Git](01-scoop.md)
 
-- 工作流
-  - [Trellis 安装与快速上手](02-trellis-workflow.md)
-
 - AI CLI 工具
   - [Claude Code](03-claude-code.md)
   - [Codex](04-codex.md)
   - [Gemini CLI](05-gemini-cli.md)
+
+- 工作流
+  - [Trellis 安装与快速上手](02-trellis-workflow.md)
 
 - 统一管理
   - [cc-switch](06-cc-switch.md)
