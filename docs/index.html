@@ -5,6 +5,41 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>AI 编码工具新手安装使用指南</title>
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  <style>
+    /* 上下页导航 */
+    .page-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 60px;
+      padding-top: 24px;
+      border-top: 1px solid #eaecef;
+    }
+    .page-nav a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #3eaf7c;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      padding: 8px 16px;
+      border: 1px solid #3eaf7c;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .page-nav a:hover {
+      background: #3eaf7c;
+      color: #fff;
+    }
+    .page-nav a.disabled {
+      color: #ccc;
+      border-color: #ccc;
+      pointer-events: none;
+    }
+    .page-nav .prev::before { content: '← '; }
+    .page-nav .next::after  { content: ' →'; }
+  </style>
 </head>
 <body>
   <div id="app"></div>
@@ -16,7 +51,110 @@
       subMaxLevel: 2,
       search: 'auto',
       auto2top: true,
-      homepage: '01-intro.md'
+      homepage: '01-intro.md',
+
+      // 章节顺序
+      chapters: [
+        '00-official-links.md',
+        '01-intro.md',
+        '01-scoop.md',
+        '02-trellis-workflow.md',
+        '03-claude-code.md',
+        '04-codex.md',
+        '05-gemini-cli.md',
+        '06-cc-switch.md',
+        '07-mcp.md',
+        '08-mcp-skills.md',
+        '09-axonhub.md',
+        '10-cliproxyapi.md',
+        '11-ccload.md',
+        '12-cpa-ccswitch.md',
+        '13-zotero-ai-butler.md'
+      ],
+
+      plugins: [
+        // 上下页导航 + 滚动到底部自动翻页
+        function (hook, vm) {
+          hook.doneEach(function () {
+            var route = vm.route;
+            var path  = route.path;
+            var chapters = vm.config.chapters;
+
+            // 去掉开头的 /
+            if (path.indexOf('/') === 0) path = path.substring(1);
+
+            var idx = chapters.indexOf(path);
+            var prevEl = document.querySelector('.page-nav');
+            if (prevEl) prevEl.remove();
+
+            var content = document.querySelector('.content') || document.querySelector('article');
+            if (!content) return;
+
+            var nav = document.createElement('div');
+            nav.className = 'page-nav';
+
+            if (idx > 0) {
+              var prev = document.createElement('a');
+              prev.className = 'prev';
+              prev.href = '#/' + chapters[idx - 1];
+              prev.textContent = '上一页';
+              prev.onclick = function () { window.scrollTo(0, 0); };
+              nav.appendChild(prev);
+            } else {
+              var ph = document.createElement('span');
+              nav.appendChild(ph);
+            }
+
+            if (idx >= 0 && idx < chapters.length - 1) {
+              var next = document.createElement('a');
+              next.className = 'next';
+              next.href = '#/' + chapters[idx + 1];
+              next.textContent = '下一页';
+              next.onclick = function () { window.scrollTo(0, 0); };
+              nav.appendChild(next);
+            }
+
+            content.appendChild(nav);
+          });
+
+          // 滚动到底部附近自动跳到下一页
+          hook.ready(function () {
+            var ticking = false;
+            window.addEventListener('scroll', function () {
+              if (ticking) return;
+              ticking = true;
+              requestAnimationFrame(function () {
+                ticking = false;
+                var scrollBottom = window.innerHeight + window.scrollY;
+                var docHeight     = document.documentElement.scrollHeight;
+                if (docHeight - scrollBottom < 80) {
+                  var chapters = vm.config.chapters;
+                  var path  = (vm.route.path || '').replace(/^\//, '');
+                  var idx   = chapters.indexOf(path);
+                  if (idx >= 0 && idx < chapters.length - 1) {
+                    // 显示提示
+                    var hint = document.getElementById('auto-next-hint');
+                    if (!hint) {
+                      hint = document.createElement('div');
+                      hint.id = 'auto-next-hint';
+                      hint.style.cssText = 'position:fixed;bottom:20px;right:20px;background:#3eaf7c;color:#fff;padding:10px 20px;border-radius:8px;font-size:14px;cursor:pointer;z-index:999;box-shadow:0 2px 12px rgba(0,0,0,.15)';
+                      hint.textContent = '下一页 →';
+                      hint.onclick = function () {
+                        window.location.href = '#/' + chapters[idx + 1];
+                        window.scrollTo(0, 0);
+                      };
+                      document.body.appendChild(hint);
+                    }
+                  }
+                } else {
+                  var hint = document.getElementById('auto-next-hint');
+                  if (hint) hint.remove();
+                }
+              });
+            });
+          });
+        }
+      ]
     }
   </script>
   <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
