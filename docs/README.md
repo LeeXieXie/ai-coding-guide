@@ -1,6 +1,6 @@
-# 复制顺序说明
+# 目录
 
-建议按下面顺序把内容复制到你的最终总稿里：
+在线访问：[https://leexiexie.github.io/ai-coding-guide/](https://leexiexie.github.io/ai-coding-guide/)
 
 1. `00-official-links.md`
 2. `01-intro.md`
@@ -16,5 +16,3 @@
 12. `11-ccload.md`
 13. `12-cpa-ccswitch.md`
 14. `13-zotero-ai-butler.md`
-
-这些文件是按章节拆开的，你可以直接逐段复制到一个总 Markdown 文件里。
