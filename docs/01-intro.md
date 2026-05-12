@@ -1,24 +1,28 @@
-# 这份指南适合谁
+# 开始之前
 
-如果你第一次接触 Claude Code、Codex、Gemini CLI，或者想用一个工具在不同 AI CLI 之间切换，这份指南会按 **Windows 主线** 讲清楚安装、登录、验证、最小使用示例和常见坑。
+## 这份指南涵盖什么
 
-同时也补上 macOS 和 Linux 的差异说明，方便你在不同电脑上复用。
+- Claude Code、Codex、Gemini CLI 的安装与使用
+- cc-switch 统一管理多个 AI CLI 的 provider 配置
+- Trellis 工作流：让 AI 编码有章可循
+- AxonHub / CLIProxyAPI / ccLoad：代理、网关、负载均衡
+- 必装 MCP 与 Skills 推荐
+- 所有工具如何串联成一套完整的 AI 编码工具链
 
----
+## 阅读顺序
 
-# 开始前先准备什么
+从头到尾按章节读即可，每一章都尽量独立。如果你已经有某个工具在用，可以直接跳到对应章节。
 
 ## 通用准备
 
-- 一个可用的终端：Windows Terminal、PowerShell、macOS 终端或 Linux Shell 都可以。
+- 终端：Windows Terminal / PowerShell / macOS Terminal / Linux Shell
+- 网络能访问各工具的官方服务
+- 提前准备好需要的账号：ChatGPT / Google / Anthropic Console
+- Docker（网关和代理工具需要）
 
-## Windows 建议
-
-Windows 上建议优先准备：
+## Windows 特别说明
 
 - Windows 10 或 11
-- PowerShell 7 或 Windows Terminal
-- 如果工具要求 Node.js，再先装 Node.js LTS
-- 如果工具提供安装包，优先用官方发布包，不要先依赖第三方镜像
-
----
+- 建议装 Git for Windows
+- 如果工具要求 Node.js，装 Node.js LTS
+- 优先用官方发布包，不要依赖第三方镜像
