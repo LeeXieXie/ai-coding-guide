@@ -17,12 +17,11 @@
 
 - 终端：Windows Terminal / PowerShell / macOS Terminal / Linux Shell
 - 网络能访问各工具的官方服务
-- 提前准备好需要的账号：ChatGPT / Google / Anthropic Console
 - Docker（网关和代理工具需要）
 
 ## Windows 特别说明
 
 - Windows 10 或 11
-- 建议装 Git for Windows
+- 推荐用 [Scoop](01-scoop.md) 安装 Node.js 和 Git，一行命令搞定
 - 如果工具要求 Node.js，装 Node.js LTS
 - 优先用官方发布包，不要依赖第三方镜像

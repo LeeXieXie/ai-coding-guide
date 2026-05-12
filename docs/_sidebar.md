@@ -1,6 +1,7 @@
 - 开始之前
   - [官方链接速查](00-official-links.md)
   - [指南介绍](01-intro.md)
+  - [Scoop 安装 Node.js 和 Git](01-scoop.md)
 
 - 工作流
   - [Trellis 安装与快速上手](02-trellis-workflow.md)
