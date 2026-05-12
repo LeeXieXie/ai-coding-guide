@@ -11,12 +11,6 @@
 ## 通用准备
 
 - 一个可用的终端：Windows Terminal、PowerShell、macOS 终端或 Linux Shell 都可以。
-- 网络可访问对应官方服务。
-- 你需要知道是否要用：
-  - ChatGPT 账号
-  - Google 账号或 Gemini API Key
-  - OpenAI API Key 或 ChatGPT 登录
-- 如果你在公司网络、代理环境、或有地区限制，先确认可以正常访问安装源和登录页面。
 
 ## Windows 建议
 
