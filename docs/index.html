@@ -74,100 +74,71 @@
 
       plugins: [
         function (hook, vm) {
-          // 根据 route path 找到章节索引
           function getIdx() {
             var path = (vm.route.path || '').replace(/^\//, '');
             var chapters = vm.config.chapters;
-            // 首页映射
             if (!path || path === '') path = vm.config.homepage || '01-intro.md';
             var idx = chapters.indexOf(path);
-            // 如果 URL 已经是 #/xx-file 的格式但 chapters 里没有，尝试直接匹配
             if (idx < 0 && path) idx = chapters.indexOf(path + '.md');
             return idx;
           }
 
           function getNextLink(idx) {
-            var chapters = vm.config.chapters;
-            if (idx >= 0 && idx < chapters.length - 1) {
-              return '#/' + chapters[idx + 1];
-            }
-            return null;
+            var c = vm.config.chapters;
+            return (idx >= 0 && idx < c.length - 1) ? '#/' + c[idx + 1] : null;
           }
 
           function getPrevLink(idx) {
-            var chapters = vm.config.chapters;
-            if (idx > 0) {
-              return '#/' + chapters[idx - 1];
-            }
-            return null;
+            var c = vm.config.chapters;
+            return (idx > 0) ? '#/' + c[idx - 1] : null;
           }
 
-          // 渲染上一页/下一页按钮
           hook.doneEach(function () {
             var idx = getIdx();
-            var prevEl = document.querySelector('.page-nav');
-            if (prevEl) prevEl.remove();
+            var el = document.querySelector('.page-nav');
+            if (el) el.remove();
+            var hint = document.getElementById('auto-next-hint');
+            if (hint) hint.remove();
 
-            var content = document.querySelector('article');
-            if (!content) return;
+            var article = document.querySelector('article');
+            if (!article) return;
 
             var nav = document.createElement('div');
             nav.className = 'page-nav';
 
-            var prevLink = getPrevLink(idx);
-            if (prevLink) {
-              var prev = document.createElement('a');
-              prev.className = 'prev';
-              prev.href = prevLink;
-              prev.textContent = '上一页';
-              nav.appendChild(prev);
-            } else {
-              nav.appendChild(document.createElement('span'));
+            var pl = getPrevLink(idx);
+            nav.innerHTML += pl
+              ? '<a class="prev" href="' + pl + '">上一页</a>'
+              : '<span></span>';
+
+            var nl = getNextLink(idx);
+            if (nl) {
+              nav.innerHTML += '<a class="next" href="' + nl + '">下一页</a>';
             }
 
-            var nextLink = getNextLink(idx);
-            if (nextLink) {
-              var next = document.createElement('a');
-              next.className = 'next';
-              next.href = nextLink;
-              next.textContent = '下一页';
-              nav.appendChild(next);
-            }
+            article.appendChild(nav);
 
-            content.appendChild(nav);
-          });
+            // 滚动到底部自动显示下一页按钮
+            var scrollHandler = function () {
+              var hint2 = document.getElementById('auto-next-hint');
+              var atBottom = (document.documentElement.scrollHeight - window.innerHeight - window.scrollY) < 60;
+              var idx2 = getIdx();
+              var nl2 = getNextLink(idx2);
 
-          // 滚动到底部自动弹出提示
-          hook.doneEach(function () {
-            var hint = document.getElementById('auto-next-hint');
-            if (hint) hint.remove();
-          });
-
-          hook.mounted(function () {
-            window.addEventListener('scroll', function () {
-              var hint = document.getElementById('auto-next-hint');
-              var scrollBottom = window.innerHeight + window.scrollY;
-              var docHeight = document.documentElement.scrollHeight;
-              var atBottom = docHeight - scrollBottom < 60;
-
-              if (atBottom) {
-                var idx = getIdx();
-                var nextLink = getNextLink(idx);
-                if (nextLink && !hint) {
-                  hint = document.createElement('div');
-                  hint.id = 'auto-next-hint';
-                  hint.style.cssText = 'position:fixed;bottom:20px;right:20px;background:#3eaf7c;color:#fff;padding:10px 20px;border-radius:8px;font-size:14px;cursor:pointer;z-index:999;box-shadow:0 2px 12px rgba(0,0,0,.15)';
-                  hint.textContent = '下一页 →';
-                  hint.onclick = function () {
-                    window.location.href = nextLink;
-                    window.scrollTo(0, 0);
-                  };
-                  document.body.appendChild(hint);
-                }
-              } else {
-                if (hint) hint.remove();
+              if (atBottom && nl2 && !hint2) {
+                var h = document.createElement('div');
+                h.id = 'auto-next-hint';
+                h.style.cssText = 'position:fixed;bottom:20px;right:20px;background:#3eaf7c;color:#fff;padding:10px 20px;border-radius:8px;font-size:14px;cursor:pointer;z-index:999;box-shadow:0 2px 12px rgba(0,0,0,.15);transition:opacity .3s';
+                h.textContent = '下一页 →';
+                h.onclick = function () { window.location.href = nl2; };
+                document.body.appendChild(h);
+              } else if ((!atBottom || !nl2) && hint2) {
+                hint2.remove();
               }
-            });
+            };
+
+            window.removeEventListener('scroll', scrollHandler);
+            window.addEventListener('scroll', scrollHandler);
           });
         }
       ]
